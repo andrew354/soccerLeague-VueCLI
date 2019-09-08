@@ -1,26 +1,62 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
+import TeamDetail from "./components/TeamDetail.vue";
+import MatchDetail from "./components/MatchDetail.vue";
+import Location from "./components/Location";
+import Login from "./views/Login.vue";
+import Chat from "./views/Chat.vue";
 
 Vue.use(Router);
 
 export default new Router({
   mode: "history",
   base: process.env.BASE_URL,
-  routes: [
-    {
-      path: "/",
-      name: "home",
-      component: Home
+  routes: [{
+      path: "/schedule",
+      name: "Schedule",
+      component: () => import('./views/Schedule.vue')
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+      path: "/teams",
+      name: "AllTeams",
+      component: () => import('./views/AllTeams.vue')
+    },
+    {
+      path: "/locations",
+      name: "AllLocations",
+      component: Location
+    },
+    {
+      path: '/teamdetail/:id',
+      props: true,
+      name: 'TeamDetail',
+      component: TeamDetail
+    },
+    {
+      path: '/matchdetail/:id',
+      props: true,
+      name: 'MatchDetail',
+      component: MatchDetail
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: Login
+    },
+    {
+      path: "/chat",
+      name: "Chat",
+      component: Chat,
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (to.params.name) {
+          next();
+        } else {
+          next({
+            name: "Login"
+          })
+        }
+      }
     }
   ]
 });
